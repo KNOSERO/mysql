@@ -1,0 +1,30 @@
+version: '3.9'
+services:
+  
+  # BAZA DANYCH MYSQL
+  mysqlDB:
+    image: mysql:5.7
+    container_name: mysqlDB
+    environment:
+      MYSQL_ROOT_PASSWORD: '${passwdDB}'
+    ports:
+      - '${portMS}:3306'
+    volumes:
+      - dataDB:/var/lib/mysql
+  
+  # PANEL ADMINA PHP 
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    links:
+      - mysqlDB
+    environment:
+      PMA_HOST: mysqlDB
+      PMA_PORT: ${portMS}
+    restart: always
+    ports:
+      - ${portPMA}:80
+
+volumes:
+  dataDB:
+    name: 'mysqlDB'
